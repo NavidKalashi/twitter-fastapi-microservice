@@ -1,0 +1,41 @@
+name: twitter-fastapi-project
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - user_data:/var/lib/postgresql/data
+
+  user-service:
+    image: user-service-image
+    container_name: user-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./user_service:/app
+    depends_on:
+      - postgres
+    environment:
+      DB_NAME: userdb
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_HOST: postgres
+      DB_PORT: 5432
+
+  # api-gateway:
+  #   image: gateway-service-image
+  #   container_name: gateway-service
+  #   ports:
+  #     - "8001:8001"
+  #   volumes:
+  #     - ./gateway:/app
+
+volumes:
+  user_data:
