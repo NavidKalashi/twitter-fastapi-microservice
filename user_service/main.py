@@ -1,11 +1,9 @@
 from fastapi import FastAPI
-from app.db.session import engine, Base
+from app.db import models
+from app.db.database import engine
 
 app = FastAPI(title="Auth Service")
-
-@app.on_event("startup")
-def on_startup():
-    Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def read_root():
